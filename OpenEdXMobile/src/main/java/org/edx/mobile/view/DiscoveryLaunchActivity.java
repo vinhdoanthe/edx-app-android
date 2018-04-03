@@ -4,13 +4,14 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.Menu;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.ActivityDiscoveryLaunchBinding;
 import org.edx.mobile.module.analytics.Analytics;
+import org.edx.mobile.util.SoftKeyboardUtil;
 
 public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {
 
@@ -30,15 +31,24 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
             @Override
             public void setEnabledButtons(boolean courseDiscoveryEnabled) {
                 if (courseDiscoveryEnabled) {
-                    binding.discoverCourses.setOnClickListener(new OnClickListener() {
+                    binding.svSearchCourses.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
-                        public void onClick(View v) {
+                        public boolean onQueryTextSubmit(String query) {
+                            if (query == null || query.trim().isEmpty())
+                                return false;
+                            SoftKeyboardUtil.hide(DiscoveryLaunchActivity.this);
                             environment.getAnalyticsRegistry().trackDiscoverCoursesClicked();
-                            environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this);
+                            environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this, query);
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            return false;
                         }
                     });
                 } else {
-                    binding.discoverCourses.setVisibility(View.GONE);
+                    binding.svSearchCourses.setVisibility(View.GONE);
                 }
             }
 
