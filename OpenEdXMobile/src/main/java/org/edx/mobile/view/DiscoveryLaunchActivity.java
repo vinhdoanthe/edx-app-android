@@ -40,6 +40,8 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                                 return false;
                             SoftKeyboardUtil.hide(DiscoveryLaunchActivity.this);
                             environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this, query);
+                            // Empty the SearchView upon submit
+                            binding.svSearchCourses.setQuery("", false);
 
                             final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
                             environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
