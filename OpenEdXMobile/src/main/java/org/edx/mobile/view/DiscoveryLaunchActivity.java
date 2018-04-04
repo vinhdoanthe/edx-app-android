@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.view.View;
-import android.view.View.OnClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.ActivityDiscoveryLaunchBinding;
@@ -14,6 +13,8 @@ import org.edx.mobile.module.analytics.Analytics;
 import org.edx.mobile.util.SoftKeyboardUtil;
 
 public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {
+
+    private ActivityDiscoveryLaunchBinding binding;
 
     @NonNull
     @Override
@@ -24,7 +25,7 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     @NonNull
     @Override
     protected DiscoveryLaunchPresenter.ViewInterface createView(@Nullable Bundle savedInstanceState) {
-        final ActivityDiscoveryLaunchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_discovery_launch);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_discovery_launch);
         environment.getAnalyticsRegistry().trackScreenView(Analytics.Screens.LAUNCH_ACTIVITY);
         AuthPanelUtils.setAuthPanelVisible(true, binding.authPanel, environment);
         return new DiscoveryLaunchPresenter.ViewInterface() {
@@ -64,5 +65,6 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
     protected void onResume() {
         super.onResume();
         presenter.onResume();
+        SoftKeyboardUtil.clearViewFocus(binding.svSearchCourses);
     }
 }
