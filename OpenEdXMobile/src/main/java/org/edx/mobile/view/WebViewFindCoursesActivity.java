@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseWebViewFindCoursesActivity;
 import org.edx.mobile.logger.Logger;
@@ -87,6 +88,8 @@ public class WebViewFindCoursesActivity extends BaseWebViewFindCoursesActivity {
                     return false;
                 initSearch(query);
                 searchView.onActionViewCollapsed();
+                final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
+                environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
                 return true;
             }
 

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.ActivityDiscoveryLaunchBinding;
 import org.edx.mobile.module.analytics.Analytics;
@@ -38,8 +39,10 @@ public class DiscoveryLaunchActivity extends PresenterActivity<DiscoveryLaunchPr
                             if (query == null || query.trim().isEmpty())
                                 return false;
                             SoftKeyboardUtil.hide(DiscoveryLaunchActivity.this);
-                            environment.getAnalyticsRegistry().trackDiscoverCoursesClicked();
                             environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this, query);
+
+                            final boolean isLoggedIn = environment.getLoginPrefs().getUsername() != null;
+                            environment.getAnalyticsRegistry().trackCoursesSearch(query, isLoggedIn, BuildConfig.VERSION_NAME);
                             return true;
                         }
 
